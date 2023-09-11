@@ -1,0 +1,79 @@
+# Function to convert a list of numbers to their binary representations
+def to_binary(numbers):
+    return [bin(x)[2:] for x in numbers]
+
+# Function to generate Pascal's Triangle up to 'n' rows
+def generate_pascals_triangle(n):
+    triangle = []
+    for i in range(n):
+        row = [1 if j == 0 or j == i else row[j - 1] + row[j] for j in range(i + 1)]
+        triangle.append(row)
+    return triangle
+
+# Function to extract diagonals from Pascal's Triangle
+def extract_diagonals(triangle, num_diagonals):
+    diagonals = []
+    for k in range(num_diagonals):
+        diagonal = []
+        for n in range(k, len(triangle)):
+            diagonal.append(triangle[n][k])
+        diagonals.append(diagonal)
+    return diagonals
+
+# Function to generate and display diagonals in binary form
+def generate_and_display_diagonals_in_binary(num_diagonals):
+    pascals_triangle = generate_pascals_triangle(num_diagonals)
+    diagonals = extract_diagonals(pascals_triangle, num_diagonals)
+    diagonals_in_binary = [to_binary(diagonal) for diagonal in diagonals]
+    return diagonals_in_binary
+
+try:
+    user_input = int(input("Enter the number of diagonals you'd like to see: "))
+    diagonals_in_binary_user_input = generate_and_display_diagonals_in_binary(user_input)
+    print(diagonals_in_binary_user_input)
+except ValueError:
+    print("Please enter a valid integer.")
+
+diagonals_in_binary_user_input = generate_and_display_diagonals_in_binary(user_input)
+
+
+# Function to save the diagonals in a text file with user-defined options
+
+def save_diagonals_to_txt(diagonals, filename, separator):
+    with open(filename, 'w') as f:
+        for diagonal in diagonals:
+            f.write(separator.join(diagonal) + '\n')
+
+
+def get_user_input_and_save_option():
+    try:
+        # Get the number of diagonals from the user
+        num_diagonals = int(input("Please enter the number of diagonals you would like to see: "))
+
+        # Generate the diagonals in binary
+        diagonals_in_binary = generate_and_display_diagonals_in_binary(num_diagonals)
+
+        # Ask the user if they want to save the output
+        save_option = input("Do you want to save the diagonals to a text file? (yes/no): ")
+
+        # If the user wants to save the output
+        if save_option.lower() == 'yes':
+            # Ask for the filename
+            filename = input("Please enter the filename (as .txt): ")
+
+            # Ask for separator
+            separator = input("Enter a separator between numbers (leave empty for no space): ")
+
+            # Save to a text file
+            save_diagonals_to_txt(diagonals_in_binary, filename, separator)
+
+            return f"Diagonals have been saved to {filename}"
+        else:
+            return diagonals_in_binary
+    except ValueError:
+        return "Invalid input. Please enter an integer."
+
+
+# Call the function that handles everything
+result = get_user_input_and_save_option()
+print(result)
